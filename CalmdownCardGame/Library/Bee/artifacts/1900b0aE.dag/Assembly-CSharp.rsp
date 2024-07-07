@@ -398,6 +398,8 @@
 "Assets/Scripts/MainMenu/Option.cs"
 "Assets/Scripts/MainMenu/ResolutionData.cs"
 "Assets/Scripts/MainMenu/ResolutionUtility.cs"
+"Assets/Scripts/Nonogram/Cell.cs"
+"Assets/Scripts/Nonogram/GridManager.cs"
 -langversion:9.0
 /deterministic
 /optimize+
