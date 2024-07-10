@@ -4,27 +4,45 @@ using UnityEngine.EventSystems;
 
 public class Cell : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    private Image image;
     private GridManager gridManager;
+    private Image image;
+    private GameObject text;
+    public Sprite[] sprites;
 
     // 0:빈 셀, 1:체크 셀, 2:X셀
-    public Sprite[] sprites;
-    private int state;
+    public int state;
 
-    public int column;
-    public int row;
+    [HideInInspector] public int column;
+    [HideInInspector] public int row;
 
     private void Start()
     {
-        image = GetComponent<Image>();
         gridManager = transform.parent.GetComponent<GridManager>();
+        image = GetComponent<Image>();
+        text = transform.GetChild(0).gameObject;
         state = 0;
         UpdateCell();
     }
 
     private void UpdateCell()
     {
-        image.sprite = sprites[state];
+        switch(state)
+        {
+            case 0:
+                text.SetActive(false);
+                image.sprite = sprites[0];
+                break;
+
+            case 1:
+                text.SetActive(false);
+                image.sprite = sprites[1];
+                break;
+
+            case 2:
+                text.SetActive(true);
+                image.sprite = sprites[0];
+                break;
+        }
     }
 
     public bool IsFilled()
@@ -34,10 +52,15 @@ public class Cell : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPoin
 
     public void Clear(bool solution)
     {
-        image.sprite = sprites[0];
+        text.SetActive(false);
+
         if(solution)
         {
             image.color = Color.black;
+        }
+        else
+        {
+            image.color = Color.white;
         }
     }
 
@@ -77,6 +100,7 @@ public class Cell : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPoin
 
             }
             UpdateCell();
+            gridManager.HintAutoCheck(column, row);
             gridManager.CheckSolution();
         }
     }

@@ -400,6 +400,7 @@
 "Assets/Scripts/MainMenu/ResolutionUtility.cs"
 "Assets/Scripts/Nonogram/Cell.cs"
 "Assets/Scripts/Nonogram/GridManager.cs"
+"Assets/Scripts/Nonogram/Hint.cs"
 -langversion:9.0
 /deterministic
 /optimize+
