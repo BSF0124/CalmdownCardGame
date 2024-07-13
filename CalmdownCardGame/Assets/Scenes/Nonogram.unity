@@ -279,9 +279,9 @@ MonoBehaviour:
   preview: {fileID: 563199967}
   cellPrefab: {fileID: 6231582238585166777, guid: 0995df25d8937224e8f7eb2e298b713d, type: 3}
   hintPrefab: {fileID: 2633335326360592597, guid: 37e66930c9d705d4a9d56ff5cb47bdfe, type: 3}
-  rows: 5
-  columns: 5
-  solutions: 01010101000100010100010101000000000101000001010100
+  rows: 10
+  columns: 10
+  solutions: 
   current_Column: 0
   current_Row: 0
   stageClear: 0

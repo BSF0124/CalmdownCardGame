@@ -53,15 +53,7 @@ public class Cell : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPoin
     public void Clear(bool solution)
     {
         text.SetActive(false);
-
-        if(solution)
-        {
-            image.color = Color.black;
-        }
-        else
-        {
-            image.color = Color.white;
-        }
+        image.color = solution? Color.black : Color.white;
     }
 
 
@@ -72,16 +64,8 @@ public class Cell : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPoin
             if(eventData.button == PointerEventData.InputButton.Left)
             {
                 gridManager.isClicking = true;
-                if(state == 1)
-                {
-                    state = 0;
-                    gridManager.clickType = 0;
-                }
-                else
-                {
-                    state = 1;
-                    gridManager.clickType = 1;
-                }
+                state = state == 1 ? 0 : 1;
+                gridManager.clickType = state;
             }
 
             else if(eventData.button == PointerEventData.InputButton.Right)
@@ -131,6 +115,7 @@ public class Cell : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPoin
                         state = 0;
                         break;
                 }
+                gridManager.HintAutoCheck(column, row);
             }
             UpdateCell();
             gridManager.CheckSolution();

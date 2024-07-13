@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class GridManager : MonoBehaviour
 {
@@ -36,8 +36,7 @@ public class GridManager : MonoBehaviour
 
         for(int i=0; i<solutions.Length; i++)
         {
-            int rand = Random.Range(0, 2);
-            solutions[i] = rand == 0? false : true;
+            solutions[i] = Random.Range(0, 2)==1;
         }
 
         GridSetting();
@@ -90,24 +89,18 @@ public class GridManager : MonoBehaviour
 
             // 마지막 연속되는 hint를 리스트에 추가
             if(count != 0)
-            {
                 temp.Add(count);
-            }
 
             // hint가 아예 없는 column일 경우 0을 추가
             if(temp.Count == 0)
-            {
                 temp.Add(0);
-            }
 
             // 한 컬럼에 대한 힌트 리스트를 columnHints에 추가
             columnHints.Add(temp);
 
             // 컬럼 힌트 크기 갱신
             if(columnHintSize < temp.Count)
-            {
                 columnHintSize = temp.Count;
-            }
         }
 
         // 각 컬럼 힌트 리스트에서 빈 공간을 0으로 채움
@@ -131,14 +124,10 @@ public class GridManager : MonoBehaviour
                 GameObject hint = Instantiate(hintPrefab, columnGrid.transform);
                 
                 if(columnHints[i][j] == 0)
-                {
                     hint.transform.GetChild(0).gameObject.SetActive(false);
-                }
 
                 else
-                {
                     hint.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = columnHints[i][j].ToString();
-                }
             }
         }
         
@@ -174,24 +163,18 @@ public class GridManager : MonoBehaviour
 
             // 마지막 연속되는 hint를 리스트에 추가
             if(count != 0)
-            {
                 temp.Add(count);
-            }
 
             // hint가 아예 없는 row일 경우 0을 추가
             if(temp.Count == 0)
-            {
                 temp.Add(0);
-            }
 
             // 한 로우에 대한 힌트 리스트를 rowwHints에 추가
             rowHints.Add(temp);
 
             // 로우 힌트 크기 갱신
             if(rowHintSize < temp.Count)
-            {
                 rowHintSize = temp.Count;
-            }
         }
 
         for(int i=0; i<rows; i++)
@@ -213,14 +196,10 @@ public class GridManager : MonoBehaviour
                 GameObject hint = Instantiate(hintPrefab, rowGrid.transform);
                 
                 if(rowHints[i][j] == 0)
-                {
                     hint.transform.GetChild(0).gameObject.SetActive(false);
-                }
 
                 else
-                {
                     hint.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = rowHints[i][j].ToString();
-                }
             }
         }
     }
@@ -235,6 +214,7 @@ public class GridManager : MonoBehaviour
                 GameObject cell = Instantiate(cellPrefab, transform);
                 cell.GetComponent<Cell>().column = j;
                 cell.GetComponent<Cell>().row = i;
+                cell.transform.name = (i * columns + j).ToString();
             }
         }
     }
@@ -306,72 +286,101 @@ public class GridManager : MonoBehaviour
 
     public void HintAutoCheck(int _column, int _row)
     {
-        // Column hints check
-        bool columnCorrect = true;
-        int columnTemp = 0;
-        for(int i=0; i<columnHintSize; i++)
+        CheckColumnHints(_column);
+        CheckRowHints(_row);
+    }
+
+    private void CheckColumnHints(int _column)
+    {
+        List<int> currentColumnHints = columnHints[_column];
+        currentColumnHints.RemoveAll(i => i==0);
+
+        List<int> filledBlocks = new List<int>();
+        int count = 0;
+
+        // Count the filled blocks in the column
+        for (int i = 0; i < rows; i++)
         {
-            int count = 0;
-            if(columnHints[_column][i] == 0)
+            Cell cell = transform.GetChild(i * columns + _column).GetComponent<Cell>();
+            if (cell.IsFilled())
             {
-                continue;
+                count++;
             }
-
-            for(int j=0; j<=columns; j++)
+            else if (count > 0)
             {
-                Cell cell = transform.GetChild(j*columns+_column).GetComponent<Cell>();
-                if(cell.IsFilled())
-                {    
-                    count++;
-                    print(columnTemp);
-                    print(count);
-                }
-
-                else
-                {
-                    if(count != columnHints[_column][i] && count != 0)
-                        columnCorrect = false;
-                    
-                    else
-                        columnTemp = j+1;
-
-                    break;
-                }
-            }
-            if(!columnCorrect)
-                break;
-        }
-
-        bool isColumnEmpty = true;
-        for(int i=0; i<columnHintSize; i++)
-        {
-            Cell cell = transform.GetChild(i*columns+_column).GetComponent<Cell>();
-            
-            if(!cell.IsFilled())
-            {
-                isColumnEmpty = false;
-                break;
+                filledBlocks.Add(count);
+                count = 0;
             }
         }
-        columnCorrect = isColumnEmpty==true? false: columnCorrect;
-
-        print(columnCorrect);
-        if(columnCorrect)
+        if (count > 0)
         {
-            for(int i=0; i<columnHintSize; i++)
-            {
-                Hint hint = columnGrid.transform.GetChild(_column*columnHintSize+i).GetComponent<Hint>();
-                hint.AutoCheck(true);
-            }
+            filledBlocks.Add(count);
         }
 
-        else
+        // Compare filled blocks with hints
+        bool columnCorrect = CompareHints(currentColumnHints, filledBlocks);
+
+        // Update hints
+        for (int i = 0; i < columnHintSize; i++)
         {
-            for(int i=0; i<columnHintSize; i++)
+            Hint hint = columnGrid.transform.GetChild(_column * columnHintSize + i).GetComponent<Hint>();
+            hint.AutoCheck(columnCorrect);
+        }
+    }
+
+    private void CheckRowHints(int _row)
+    {
+        List<int> currentRowHints = rowHints[_row];
+        currentRowHints.RemoveAll(i => i==0);
+
+        List<int> filledBlocks = new List<int>();
+        int count = 0;
+
+        // Count the filled blocks in the row
+        for (int i = 0; i < columns; i++)
+        {
+            Cell cell = transform.GetChild(_row * columns + i).GetComponent<Cell>();
+            if (cell.IsFilled())
             {
-                Hint hint = columnGrid.transform.GetChild(_column*columnHintSize+i).GetComponent<Hint>();
-                hint.AutoCheck(false);
+                count++;
+            }
+            else if (count > 0)
+            {
+                filledBlocks.Add(count);
+                count = 0;
             }
         }
+        if (count > 0)
+        {
+            filledBlocks.Add(count);
+        }
+
+        // Compare filled blocks with hints
+        bool rowCorrect = CompareHints(currentRowHints, filledBlocks);
+
+        // Update hints
+        for (int i = 0; i < rowHintSize; i++)
+        {
+            Hint hint = rowGrid.transform.GetChild(_row * rowHintSize + i).GetComponent<Hint>();
+            hint.AutoCheck(rowCorrect);
+        }
+    }
+
+    private bool CompareHints(List<int> hints, List<int> filledBlocks)
+    {
+        if (hints.Count != filledBlocks.Count) 
+        {
+            return false;
+        }
+
+        for (int i = 0; i < hints.Count; i++)
+        {
+            if (hints[i] != filledBlocks[i]) 
+            {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }
