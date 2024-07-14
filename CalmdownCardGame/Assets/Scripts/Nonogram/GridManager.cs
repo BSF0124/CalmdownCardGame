@@ -26,12 +26,13 @@ public class GridManager : MonoBehaviour
 
     [HideInInspector] public List<List<int>> columnHints = new List<List<int>>();
     [HideInInspector] public List<List<int>> rowHints = new List<List<int>>();
-    private int columnHintSize;
-    private int rowHintSize;
+    [HideInInspector] public int columnHintSize;
+    [HideInInspector] public int rowHintSize;
 
-    private void Start()
+    private void Awake()
     {
         stageClear = false;
+        GetComponent<GridLayoutGroup>().constraintCount = columns;
         solutions = new bool[rows * columns];
 
         for(int i=0; i<solutions.Length; i++)
@@ -114,7 +115,7 @@ public class GridManager : MonoBehaviour
         }
 
         columnGrid.constraintCount = columns;
-        mainGrid.spacing = new Vector2(mainGrid.spacing.x, 200 + (columnHintSize-1)*50);
+        mainGrid.spacing = new Vector2(mainGrid.spacing.x, 50 * (columns + columnHintSize - 2));
 
         // 힌트 오브젝트 생성
         for(int i=0; i<columns; i++)
@@ -187,7 +188,7 @@ public class GridManager : MonoBehaviour
         }
 
         rowGrid.constraintCount = rowHintSize;
-        mainGrid.spacing = new Vector2(200 + (rowHintSize-1)*50, mainGrid.spacing.y);
+        mainGrid.spacing = new Vector2(50 * (rows + rowHintSize - 2), mainGrid.spacing.y);
 
         for(int i=0; i<rows; i++)
         {
@@ -289,7 +290,6 @@ public class GridManager : MonoBehaviour
         CheckColumnHints(_column);
         CheckRowHints(_row);
     }
-
     private void CheckColumnHints(int _column)
     {
         List<int> currentColumnHints = columnHints[_column];
@@ -327,7 +327,6 @@ public class GridManager : MonoBehaviour
             hint.AutoCheck(columnCorrect);
         }
     }
-
     private void CheckRowHints(int _row)
     {
         List<int> currentRowHints = rowHints[_row];
@@ -365,7 +364,6 @@ public class GridManager : MonoBehaviour
             hint.AutoCheck(rowCorrect);
         }
     }
-
     private bool CompareHints(List<int> hints, List<int> filledBlocks)
     {
         if (hints.Count != filledBlocks.Count) 
