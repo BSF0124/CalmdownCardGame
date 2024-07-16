@@ -9,8 +9,8 @@ public class Camera_Nonogram : MonoBehaviour
     private void Start()
     {
         camera = GetComponent<Camera>();
-        int x = gridManager.columnHintSize;
-        int y = gridManager.rowHintSize;
+        int x = gridManager.rowHintSize;
+        int y = gridManager.columnHintSize;
 
         switch(gridManager.columns)
         {

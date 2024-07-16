@@ -24,7 +24,7 @@ public class Cell : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPoin
         UpdateCell();
     }
 
-    private void UpdateCell()
+    public void UpdateCell()
     {
         switch(state)
         {
@@ -124,6 +124,7 @@ public class Cell : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPoin
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        gridManager.SaveState();
         gridManager.isClicking = false;
         gridManager.clickType = -1;
     }

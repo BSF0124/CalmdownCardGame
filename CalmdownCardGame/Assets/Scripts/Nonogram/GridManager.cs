@@ -4,6 +4,20 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
+public class CellState
+{
+    public int state;
+    public int column;
+    public int row;
+
+    public CellState(int state, int column, int row)
+    {
+        this.state = state;
+        this.column = column;
+        this.row = row;
+    }
+}
+
 public class GridManager : MonoBehaviour
 {
     public GridLayoutGroup mainGrid;
@@ -29,6 +43,9 @@ public class GridManager : MonoBehaviour
     [HideInInspector] public int columnHintSize;
     [HideInInspector] public int rowHintSize;
 
+    private Stack<CellState[]> undoStack = new Stack<CellState[]>();
+    private Stack<CellState[]> redoStack = new Stack<CellState[]>();
+
     private void Awake()
     {
         stageClear = false;
@@ -42,6 +59,7 @@ public class GridManager : MonoBehaviour
 
         GridSetting();
         GenerateGrid();
+        SaveState();
     }
 
     private void Update()
@@ -49,6 +67,16 @@ public class GridManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene("Nonogram");
+        }
+
+        if(Input.GetKeyDown(KeyCode.Z))
+        {
+            Undo();
+        }
+
+        if(Input.GetKeyDown(KeyCode.X))
+        {
+            Redo();
         }
     }
 
@@ -380,5 +408,46 @@ public class GridManager : MonoBehaviour
         }
         
         return true;
+    }
+
+    public void SaveState()
+    {
+        CellState[] currentState = new CellState[rows * columns];
+        for (int i = 0; i < rows * columns; i++)
+        {
+            Cell cell = transform.GetChild(i).GetComponent<Cell>();
+            currentState[i] = new CellState(cell.state, cell.column, cell.row);
+        }
+        undoStack.Push(currentState);
+        redoStack.Clear(); // 새로운 상태 저장 시, redo 스택 초기화
+    }
+
+    private void Undo()
+    {
+        if (undoStack.Count > 1)
+        {
+            redoStack.Push(undoStack.Pop());
+            ApplyState(undoStack.Peek());
+        }
+    }
+
+    private void Redo()
+    {
+        if (redoStack.Count > 0)
+        {
+            undoStack.Push(redoStack.Pop());
+            ApplyState(undoStack.Peek());
+        }
+    }
+
+    private void ApplyState(CellState[] state)
+    {
+        for (int i = 0; i < state.Length; i++)
+        {
+            Cell cell = transform.GetChild(i).GetComponent<Cell>();
+            cell.state = state[i].state;
+            cell.UpdateCell();
+        }
+        CheckSolution();
     }
 }
