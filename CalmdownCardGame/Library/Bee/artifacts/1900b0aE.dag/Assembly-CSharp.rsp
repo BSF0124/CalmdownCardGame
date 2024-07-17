@@ -402,6 +402,9 @@
 "Assets/Scripts/Nonogram/Cell.cs"
 "Assets/Scripts/Nonogram/GridManager.cs"
 "Assets/Scripts/Nonogram/Hint.cs"
+"Assets/Scripts/StoryMode/Background.cs"
+"Assets/Scripts/StoryMode/SelectButton.cs"
+"Assets/Scripts/StoryMode/StoryMode.cs"
 -langversion:9.0
 /deterministic
 /optimize+
