@@ -10,7 +10,7 @@ public class SelectButton : MonoBehaviour
 
     private void Start()
     {
-        storyMode = transform.parent.GetComponent<StoryMode>();
+        storyMode = transform.parent.transform.parent.GetComponent<StoryMode>();
         image = GetComponent<Image>();
     }
 
