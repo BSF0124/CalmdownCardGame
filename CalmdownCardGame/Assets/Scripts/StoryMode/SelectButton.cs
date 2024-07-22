@@ -10,7 +10,7 @@ public class SelectButton : MonoBehaviour
 
     private void Start()
     {
-        storyMode = transform.parent.transform.parent.GetComponent<StoryMode>();
+        storyMode = transform.parent.GetComponent<StoryMode>();
         image = GetComponent<Image>();
     }
 
@@ -26,8 +26,8 @@ public class SelectButton : MonoBehaviour
         image.sprite = sprites[0];
     }
 
-    public void OnPointerClick()
-    {
-        storyMode.ButtonClick();
-    }
+    // public void OnPointerClick()
+    // {
+    //     storyMode.ButtonClick();
+    // }
 }
