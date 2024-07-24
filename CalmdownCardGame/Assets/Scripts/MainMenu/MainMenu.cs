@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class MainMenu : MonoBehaviour
     // 게임 시작
     public void GameStart()
     {
-        print("Game Start");
+        SceneManager.LoadScene("StoryMode");
     }
 
     // 카드 도감

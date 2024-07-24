@@ -27,8 +27,8 @@ public class GridManager : MonoBehaviour
     public GameObject cellPrefab;
     public GameObject hintPrefab;
 
-    public int rows = 10;
-    public int columns = 10;
+    public int rows;
+    public int columns;
     public bool[] solutions;
 
     [HideInInspector] public int current_Column;
@@ -48,9 +48,25 @@ public class GridManager : MonoBehaviour
 
     private void Awake()
     {
+        switch(GameManager.instance.current_Difficulty)
+        {
+            case GameManager.NNG_Difficulty.Easy:
+                rows = 10;
+                columns = 10;
+                break;
+            case GameManager.NNG_Difficulty.Normal:
+                rows = 15;
+                columns = 15;
+                break;
+            case GameManager.NNG_Difficulty.Hard:
+                rows = 20;
+                columns = 20;
+                break;
+        }
+
         stageClear = false;
-        GetComponent<GridLayoutGroup>().constraintCount = columns;
         solutions = new bool[rows * columns];
+        GetComponent<GridLayoutGroup>().constraintCount = columns;
 
         for(int i=0; i<solutions.Length; i++)
         {
@@ -77,6 +93,11 @@ public class GridManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.X))
         {
             Redo();
+        }
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("StoryMode");
         }
     }
 

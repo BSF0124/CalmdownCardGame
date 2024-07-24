@@ -394,6 +394,9 @@
 -analyzer:"D:/Unity/2022.3.29f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll"
 -analyzer:"D:/Unity/2022.3.29f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/Scripts/Card/HoloCard.cs"
+"Assets/Scripts/CardData.cs"
+"Assets/Scripts/Dual/DualManager.cs"
+"Assets/Scripts/GameManager.cs"
 "Assets/Scripts/MainMenu/MainMenu.cs"
 "Assets/Scripts/MainMenu/Option.cs"
 "Assets/Scripts/MainMenu/ResolutionData.cs"
@@ -403,6 +406,7 @@
 "Assets/Scripts/Nonogram/GridManager.cs"
 "Assets/Scripts/Nonogram/Hint.cs"
 "Assets/Scripts/StoryMode/Background.cs"
+"Assets/Scripts/StoryMode/Nonogram.cs"
 "Assets/Scripts/StoryMode/SelectButton.cs"
 "Assets/Scripts/StoryMode/StoryMode.cs"
 -langversion:9.0
