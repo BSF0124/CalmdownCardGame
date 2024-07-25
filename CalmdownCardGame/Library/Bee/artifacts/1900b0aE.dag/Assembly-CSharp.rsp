@@ -395,6 +395,7 @@
 -analyzer:"D:/Unity/2022.3.29f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/Scripts/Card/HoloCard.cs"
 "Assets/Scripts/CardData.cs"
+"Assets/Scripts/CardDataManager.cs"
 "Assets/Scripts/Dual/DualManager.cs"
 "Assets/Scripts/GameManager.cs"
 "Assets/Scripts/MainMenu/MainMenu.cs"
