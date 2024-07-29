@@ -15,6 +15,6 @@ MonoBehaviour:
   cardID: 25
   cardName: "\uCE68\uACF5, \uC5B4\uCC0C \uBAA9\uB9CC \uC624\uC168\uC18C"
   cardRarity: 2
-  cardType: 0
+  cardType: 1
   attackPower: 10
   cardSprite: {fileID: 21300000, guid: ba0a99d4f0b347441bf26c22c9fde6ca, type: 3}

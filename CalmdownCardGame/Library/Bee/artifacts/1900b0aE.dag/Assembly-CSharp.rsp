@@ -413,6 +413,7 @@
 "Assets/Scripts/StoryMode/Nonogram.cs"
 "Assets/Scripts/StoryMode/SelectButton.cs"
 "Assets/Scripts/StoryMode/StoryMode.cs"
+"Assets/Scripts/StoryMode/WorldMap.cs"
 -langversion:9.0
 /deterministic
 /optimize+

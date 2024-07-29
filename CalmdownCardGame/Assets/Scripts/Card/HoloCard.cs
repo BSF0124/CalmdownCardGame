@@ -14,9 +14,9 @@ public class HoloCard : MonoBehaviour
     // private Renderer _renderer;
     // private bool isMouseOver = false;   // 커서가 카드 위에 있는지 여부
 
-    private string cardName;
-    private CardRarity cardRarity;
-    private CardType cardType;
+    public string cardName;
+    public CardRarity cardRarity;
+    public CardType cardType;
 
     // private void Awake()
     // {

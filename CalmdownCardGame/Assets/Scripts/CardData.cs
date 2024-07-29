@@ -17,7 +17,7 @@ public enum CardRarity
     N,
     R,
     SR,
-    SSR
+    Null
 }
 
 public enum CardType

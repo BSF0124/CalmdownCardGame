@@ -6,7 +6,9 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public enum NNG_Difficulty{Easy, Normal, Hard};
+
     public NNG_Difficulty current_Difficulty;
+    public int current_Stage;
     
     private void Awake()
     {
