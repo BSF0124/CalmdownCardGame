@@ -3,15 +3,15 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
-public class DualCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, IPointerDownHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class DualCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     private RectTransform rectTransform;
     private RectTransform cardImage;
 
     public Canvas canvas;
     private Vector2 initalPosition;
-    private bool isDrag = false;
-    
+    private bool isSelected = false;
+
     private float duration = 0.2f;
     public int cardID;
     public CardRarity cardRarity;
@@ -19,7 +19,7 @@ public class DualCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public int attackPower;
     public int life;
 
-    private void Start()
+    private void Awake()
     {
         Init();
     }
@@ -27,8 +27,8 @@ public class DualCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void Init()
     {
         rectTransform = GetComponent<RectTransform>();
-        cardImage = transform.GetChild(0).GetComponent<RectTransform>();
         initalPosition = rectTransform.anchoredPosition;
+        cardImage = transform.GetChild(0).GetComponent<RectTransform>();
 
         // cardRarity = CardDataManager.instance.allCards[cardID].cardRarity;
         // cardType = CardDataManager.instance.allCards[cardID].cardType;
@@ -53,40 +53,57 @@ public class DualCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if(!isDrag)
+        if(!DualManager.instance.isDraging)
             cardImage.DOScale(new Vector3(1.1f, 1.1f, 1.1f), duration);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if(!isDrag)
+        if(!DualManager.instance.isDraging)
             cardImage.DOScale(Vector3.one, duration);
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
-
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-
+        if(!DualManager.instance.isDraging)
+        {
+            if(isSelected)
+                Deselect();
+                
+            else
+                Select();
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         Vector2 mousePosition;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, eventData.position, eventData.pressEventCamera, out mousePosition);
-        rectTransform.anchoredPosition = mousePosition + new Vector2(rectTransform.rect.width/2, rectTransform.rect.height/2);
+        rectTransform.anchoredPosition = mousePosition + new Vector2(0, rectTransform.rect.height/2);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        print("Drag Begin");
+        DualManager.instance.isDraging = true;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        print("Drag End");
+        DualManager.instance.isDraging = false;
+        rectTransform.DOAnchorPos(initalPosition, duration);
+    }
+
+    public void Select()
+    {
+        DualManager.instance.SelectCard(this);
+        isSelected = true;
+        rectTransform.DOAnchorPos(initalPosition + new Vector2(0, 50), duration);
+    }
+
+    public void Deselect()
+    {
+        isSelected = false;
+        rectTransform.DOAnchorPos(initalPosition, duration);
+        DualManager.instance.DeselectCard(this);
     }
 }

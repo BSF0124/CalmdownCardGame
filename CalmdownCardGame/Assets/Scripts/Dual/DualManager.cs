@@ -3,19 +3,25 @@ using UnityEngine;
 
 public class DualManager : MonoBehaviour
 {
+    public static DualManager instance;
+
     private List<DualCard> playerDeck;
     private List<CardData> opponentDeck;
 
-    public  DualCard selectedCard;
+    public DualCard selectedCard;
+    public bool isDraging = false;
 
-    private void Start()
+    private void Awake()
     {
-
-    }
-
-    private void Update()
-    {
-        
+        if(instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void Dual()
@@ -28,5 +34,19 @@ public class DualManager : MonoBehaviour
 
     }
 
+    public void SelectCard(DualCard card)
+    {
+        if(selectedCard != null && selectedCard != card)
+            selectedCard.Deselect();
 
+        selectedCard = card;
+    }
+
+    public void DeselectCard(DualCard card)
+    {
+        if(selectedCard == card)
+        {
+            selectedCard = null;
+        }
+    }
 }
