@@ -1,18 +1,32 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class DualManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private List<DualCard> playerDeck;
+    private List<CardData> opponentDeck;
+
+    public  DualCard selectedCard;
+
+    private void Start()
+    {
+
+    }
+
+    private void Update()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Dual()
     {
-        
+
     }
+
+    private void FlipOppnentCard()
+    {
+
+    }
+
+
 }
