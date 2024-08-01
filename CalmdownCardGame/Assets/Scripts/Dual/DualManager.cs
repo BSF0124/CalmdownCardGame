@@ -6,10 +6,12 @@ public class DualManager : MonoBehaviour
     public static DualManager instance;
 
     private List<DualCard> playerDeck;
-    private List<CardData> opponentDeck;
+    private List<DualCard> opponentDeck;
 
-    public DualCard selectedCard;
-    public bool isDraging = false;
+    [HideInInspector] public DualCard selectedCard;
+    [HideInInspector] public bool isDraging = false;
+
+    public GameObject hand;
 
     private void Awake()
     {

@@ -10,6 +10,7 @@ public class DualCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public Canvas canvas;
     private Vector2 initalPosition;
+    private Vector2 dragOffset;
     private bool isSelected = false;
 
     private float duration = 0.2f;
@@ -19,7 +20,7 @@ public class DualCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public int attackPower;
     public int life;
 
-    private void Awake()
+    private void Start()
     {
         Init();
     }
@@ -79,12 +80,14 @@ public class DualCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         Vector2 mousePosition;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, eventData.position, eventData.pressEventCamera, out mousePosition);
-        rectTransform.anchoredPosition = mousePosition + new Vector2(0, rectTransform.rect.height/2);
+        rectTransform.anchoredPosition = mousePosition - dragOffset;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         DualManager.instance.isDraging = true;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, eventData.position, eventData.pressEventCamera, out var localPointerPosition);
+        dragOffset = localPointerPosition - rectTransform.anchoredPosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
