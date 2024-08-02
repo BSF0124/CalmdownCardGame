@@ -20,7 +20,7 @@ public class DualCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public int attackPower;
     public int life;
 
-    private void Start()
+    private void Awake()
     {
         Init();
     }
@@ -28,7 +28,6 @@ public class DualCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void Init()
     {
         rectTransform = GetComponent<RectTransform>();
-        initalPosition = rectTransform.anchoredPosition;
         cardImage = transform.GetChild(0).GetComponent<RectTransform>();
 
         // cardRarity = CardDataManager.instance.allCards[cardID].cardRarity;
@@ -50,6 +49,11 @@ public class DualCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         //         life = -1;
         //         break;
         // }
+    }
+
+    private void OnEnable() 
+    {
+        initalPosition = rectTransform.anchoredPosition;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
