@@ -5,7 +5,7 @@ using DG.Tweening;
 public class OppnentCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     public Canvas canvas;
-    public RectTransform tracker;
+    public Tracker tracker;
 
     private RectTransform rectTransform;
     private RectTransform cardImage;
@@ -13,9 +13,7 @@ public class OppnentCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private Vector2 tracker_initalPosition;
     private Vector2 dragOffset;
     private float duration = 0.2f;
-    private bool isSequenceRunning = false;
-
-
+    
     private void Start()
     {
         Init();
@@ -25,7 +23,6 @@ public class OppnentCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         rectTransform = GetComponent<RectTransform>();
         initalPosition = rectTransform.anchoredPosition;
-        tracker_initalPosition = tracker.anchoredPosition;
         cardImage = transform.GetChild(0).GetComponent<RectTransform>();
     }
 
@@ -43,9 +40,9 @@ public class OppnentCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if(!DualManager.instance.isDraging && !isSequenceRunning)
+        if(!DualManager.instance.isDraging && !DualManager.instance.isSequenceRunning)
         {
-            PanelOnOff();
+            tracker.PanelOnOff();
         }
     }
 
@@ -67,28 +64,5 @@ public class OppnentCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         DualManager.instance.isDraging = false;
         rectTransform.DOAnchorPos(initalPosition, duration);
-    }
-
-    public void PanelOnOff()
-    {
-        isSequenceRunning = true;
-
-        if(tracker.gameObject.activeSelf)
-        {
-            tracker.DOAnchorPos(tracker_initalPosition + new Vector2(-700, 0), duration)
-            .OnComplete(()=> 
-            {
-                tracker.gameObject.SetActive(false);
-                isSequenceRunning = false;
-            }
-            );
-        }
-
-        else
-        {
-            tracker.gameObject.SetActive(true);
-            tracker.DOAnchorPos(tracker_initalPosition, duration)
-            .OnComplete(()=> isSequenceRunning = false);
-        }
     }
 }

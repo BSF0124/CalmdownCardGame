@@ -1,5 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using DG.Tweening;
 using UnityEngine;
 
 public class DualManager : MonoBehaviour
@@ -7,8 +8,11 @@ public class DualManager : MonoBehaviour
     public static DualManager instance;
 
     public GameObject playerCardPrefab;
-    public List<DualCard> playerDeck;
-    private List<DualCard> opponentDeck;
+    public List<DualCard> playerCards;
+    private List<DualCard> opponentCards;
+
+    public List<int> playerDeck;
+    public List<int> opponentDeck;
 
     [HideInInspector] public DualCard selectedCard;
     [HideInInspector] public bool isDraging = false;
@@ -16,8 +20,11 @@ public class DualManager : MonoBehaviour
     public GameObject hand;
     public int currentHandIndex;
 
+    public bool isSequenceRunning = false;
+
     private void Awake()
     {
+        hand.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -200);
         if(instance == null)
         {
             instance = this;
@@ -29,12 +36,13 @@ public class DualManager : MonoBehaviour
         }
 
         Init();
+        StartCoroutine(ChangeHand());
     }
 
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space))
-            ChangeHand();
+            StartCoroutine(ChangeHand());
     }
 
     private void Init()
@@ -43,7 +51,7 @@ public class DualManager : MonoBehaviour
 
         foreach(Transform child in hand.transform)
         {
-            playerDeck.Add(child.GetComponent<DualCard>());
+            playerCards.Add(child.GetComponent<DualCard>());
         }
     }
 
@@ -75,7 +83,7 @@ public class DualManager : MonoBehaviour
 
     public void SetHand()
     {
-        if(currentHandIndex < playerDeck.Count-1)
+        if(currentHandIndex < playerCards.Count-1)
         {
             foreach(Transform child in hand.transform)
             {
@@ -83,34 +91,28 @@ public class DualManager : MonoBehaviour
             }
 
             currentHandIndex++;
-            int temp = playerDeck.Count-1 - currentHandIndex;
+            int temp = playerCards.Count-1 - currentHandIndex;
             if(temp >= 4)
             {
-                RectTransform card1 = hand.transform.GetChild(currentHandIndex).GetComponent<RectTransform>();
-                RectTransform card2 = hand.transform.GetChild(currentHandIndex+1).GetComponent<RectTransform>();
-                RectTransform card3 = hand.transform.GetChild(currentHandIndex+2).GetComponent<RectTransform>();
-                RectTransform card4 = hand.transform.GetChild(currentHandIndex+3).GetComponent<RectTransform>();
-                RectTransform card5 = hand.transform.GetChild(currentHandIndex+4).GetComponent<RectTransform>();
-                
-                card1.anchoredPosition = new Vector2(-300, -175.9f);
-                card2.anchoredPosition = new Vector2(-150, -155.9f);
-                card3.anchoredPosition = new Vector2(0, -145.9f);
-                card4.anchoredPosition = new Vector2(150, -155.9f);
-                card5.anchoredPosition = new Vector2(300, -175.9f);
+                Vector2[] positions = new Vector2[]
+                {
+                    new Vector2(-300, -175.9f),
+                    new Vector2(-150, -155.9f),
+                    new Vector2(0, -145.9f),
+                    new Vector2(150, -155.9f),
+                    new Vector2(300, -175.9f)
+                };
+                float[] rotations = new float[] { 10, 5, 0, -5, -10 };
 
-                card1.rotation = Quaternion.Euler(0, 0, 10);
-                card2.rotation = Quaternion.Euler(0, 0, 5);
-                card3.rotation = Quaternion.Euler(0, 0, 0);
-                card4.rotation = Quaternion.Euler(0, 0, -5);
-                card5.rotation = Quaternion.Euler(0, 0, -10);
+                for (int i = 0; i < 5; i++)
+                {
+                    RectTransform card = hand.transform.GetChild(currentHandIndex + i).GetComponent<RectTransform>();
+                    card.anchoredPosition = positions[i];
+                    card.rotation = Quaternion.Euler(0, 0, rotations[i]);
+                    card.gameObject.SetActive(true);
+                }
 
-                card1.gameObject.SetActive(true);
-                card2.gameObject.SetActive(true);
-                card3.gameObject.SetActive(true);
-                card4.gameObject.SetActive(true);
-                card5.gameObject.SetActive(true);
-
-                currentHandIndex+=4;
+                currentHandIndex += 4;
             }
 
             else
@@ -118,58 +120,34 @@ public class DualManager : MonoBehaviour
                 switch(temp)
                 {
                     case 0:
-                        RectTransform card1 = hand.transform.GetChild(currentHandIndex).GetComponent<RectTransform>();
-                        card1.anchoredPosition = new Vector2(0, -145.9f);
-                        card1.rotation = Quaternion.Euler(0, 0, 0);
-                        card1.gameObject.SetActive(true);
+                        SetCard(currentHandIndex, new Vector2(0, -145.9f), 0);
                         break;
 
                     case 1:
-                        RectTransform card2 = hand.transform.GetChild(currentHandIndex).GetComponent<RectTransform>();
-                        RectTransform card3 = hand.transform.GetChild(currentHandIndex+1).GetComponent<RectTransform>();
-                        card2.anchoredPosition = new Vector2(-75, -155.9f);
-                        card3.anchoredPosition = new Vector2(75, -155.9f);
-                        card2.rotation = Quaternion.Euler(0, 0, 5);
-                        card3.rotation = Quaternion.Euler(0, 0, -5);
-                        card2.gameObject.SetActive(true);
-                        card3.gameObject.SetActive(true);
-                        currentHandIndex+=1;
+                        SetCards(
+                        new int[] { currentHandIndex, currentHandIndex + 1 },
+                        new Vector2[] { new Vector2(-75, -155.9f), new Vector2(75, -155.9f) },
+                        new float[] { 5, -5 }
+                        );
+                        currentHandIndex += 1;
                         break;
 
                     case 2:
-                        RectTransform card4 = hand.transform.GetChild(currentHandIndex).GetComponent<RectTransform>();
-                        RectTransform card5 = hand.transform.GetChild(currentHandIndex+1).GetComponent<RectTransform>();
-                        RectTransform card6 = hand.transform.GetChild(currentHandIndex+2).GetComponent<RectTransform>();
-                        card4.anchoredPosition = new Vector2(-150, -155.9f);
-                        card5.anchoredPosition = new Vector2(0, -145.9f);
-                        card6.anchoredPosition = new Vector2(150, -155.9f);
-                        card4.rotation = Quaternion.Euler(0, 0, 5);
-                        card5.rotation = Quaternion.Euler(0, 0, 0);
-                        card6.rotation = Quaternion.Euler(0, 0, -5);
-                        card4.gameObject.SetActive(true);
-                        card5.gameObject.SetActive(true);
-                        card6.gameObject.SetActive(true);
-                        currentHandIndex+=2;
+                        SetCards(
+                        new int[] { currentHandIndex, currentHandIndex + 1, currentHandIndex + 2 },
+                        new Vector2[] { new Vector2(-150, -155.9f), new Vector2(0, -145.9f), new Vector2(150, -155.9f) },
+                        new float[] { 5, 0, -5 }
+                        );
+                        currentHandIndex += 2;
                         break;
 
                     case 3:
-                        RectTransform card7 = hand.transform.GetChild(currentHandIndex).GetComponent<RectTransform>();
-                        RectTransform card8 = hand.transform.GetChild(currentHandIndex+1).GetComponent<RectTransform>();
-                        RectTransform card9 = hand.transform.GetChild(currentHandIndex+2).GetComponent<RectTransform>();
-                        RectTransform card10 = hand.transform.GetChild(currentHandIndex+3).GetComponent<RectTransform>();
-                        card7.anchoredPosition = new Vector2(-225, -175.9f);
-                        card8.anchoredPosition = new Vector2(-75, -155.9f);
-                        card9.anchoredPosition = new Vector2(75, -155.9f);
-                        card10.anchoredPosition = new Vector2(225, -175.9f);
-                        card7.rotation = Quaternion.Euler(0, 0, 10);
-                        card8.rotation = Quaternion.Euler(0, 0, 5);
-                        card9.rotation = Quaternion.Euler(0, 0, -5);
-                        card10.rotation = Quaternion.Euler(0, 0, -10);
-                        card7.gameObject.SetActive(true);
-                        card8.gameObject.SetActive(true);
-                        card9.gameObject.SetActive(true);
-                        card10.gameObject.SetActive(true);
-                        currentHandIndex+=3;
+                        SetCards(
+                        new int[] { currentHandIndex, currentHandIndex + 1, currentHandIndex + 2, currentHandIndex + 3 },
+                        new Vector2[] { new Vector2(-225, -175.9f), new Vector2(-75, -155.9f), new Vector2(75, -155.9f), new Vector2(225, -175.9f) },
+                        new float[] { 10, 5, -5, -10 }
+                        );
+                        currentHandIndex += 3;
                         break;
 
                 }
@@ -179,7 +157,7 @@ public class DualManager : MonoBehaviour
 
         else
         {
-            if(currentHandIndex == playerDeck.Count-1 && currentHandIndex == 0)
+            if(currentHandIndex == playerCards.Count-1 && currentHandIndex == 0)
             {
                 RectTransform card1 = hand.transform.GetChild(currentHandIndex++).GetComponent<RectTransform>();
                 card1.anchoredPosition = new Vector2(0, -145.9f);
@@ -196,8 +174,35 @@ public class DualManager : MonoBehaviour
 
     }
 
-    public void ChangeHand()
+    IEnumerator ChangeHand()
     {
-        SetHand();
+        if(playerCards.Count <= 4)
+        {
+
+        }
+
+        else
+        {
+            RectTransform handPosition = hand.GetComponent<RectTransform>();
+            yield return handPosition.DOAnchorPosY(-200, 0.5f);
+            yield return new WaitForSeconds(0.5f);
+            SetHand();
+            yield return handPosition.DOAnchorPosY(236, 0.5f);
+        }
+    }
+
+    private void SetCard(int index, Vector2 position, float rotation)
+    {
+        RectTransform card = hand.transform.GetChild(index).GetComponent<RectTransform>();
+        card.anchoredPosition = position;
+        card.rotation = Quaternion.Euler(0, 0, rotation);
+        card.gameObject.SetActive(true);
+    }
+    private void SetCards(int[] indices, Vector2[] positions, float[] rotations)
+    {
+        for (int i = 0; i < indices.Length; i++)
+        {
+            SetCard(indices[i], positions[i], rotations[i]);
+        }
     }
 }
