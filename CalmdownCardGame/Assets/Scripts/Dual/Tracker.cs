@@ -3,19 +3,18 @@ using UnityEngine.EventSystems;
 using DG.Tweening;
 
 public class Tracker : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
-
 {
     public Canvas canvas;
+    public DualManager dualManager;
 
     private RectTransform rectTransform;
-    private Vector2 initalPosition;
+    private Vector2 initalPosition = new Vector2(50, -50);
     private Vector2 dragOffset;
     private float duration = 0.2f;
 
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
-        initalPosition = new Vector2(50, -50);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -27,37 +26,34 @@ public class Tracker : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragH
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        DualManager.instance.isDraging = true;
+        dualManager.isDraging = true;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, eventData.position, eventData.pressEventCamera, out var localPointerPosition);
         dragOffset = localPointerPosition - rectTransform.anchoredPosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        DualManager.instance.isDraging = false;
+        dualManager.isDraging = false;
         initalPosition = rectTransform.anchoredPosition;
     }
 
-    public void PanelOnOff()
+    public void PanelOff()
     {
-        DualManager.instance.isSequenceRunning = true;
-
-        if(gameObject.activeSelf)
+        dualManager.isSequenceRunning = true;
+        rectTransform.DOAnchorPosX(-700, duration)
+        .OnComplete(()=> 
         {
-            rectTransform.DOAnchorPosX(-700, duration)
-            .OnComplete(()=> 
-            {
-                gameObject.SetActive(false);
-                DualManager.instance.isSequenceRunning = false;
-            }
-            );
+            gameObject.SetActive(false);
+            dualManager.isSequenceRunning = false;
         }
+        );
+    }
 
-        else
-        {
-            gameObject.SetActive(true);
-            rectTransform.DOAnchorPos(initalPosition, duration)
-            .OnComplete(()=> DualManager.instance.isSequenceRunning = false);
-        }
+    public void PanelOn()
+    {
+        dualManager.isSequenceRunning = true;
+        gameObject.SetActive(true);
+        rectTransform.DOAnchorPos(initalPosition, duration)
+        .OnComplete(()=> dualManager.isSequenceRunning = false);
     }
 }

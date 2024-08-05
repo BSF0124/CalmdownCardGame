@@ -2,65 +2,63 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DualManager : MonoBehaviour
 {
-    public static DualManager instance;
-
+    public Canvas canvas;
     public GameObject playerCardPrefab;
-    public List<DualCard> playerCards;
-    private List<DualCard> opponentCards;
-
-    public List<int> playerDeck;
-    public List<int> opponentDeck;
+    public GameObject hand;
 
     [HideInInspector] public DualCard selectedCard;
     [HideInInspector] public bool isDraging = false;
+    [HideInInspector] public bool isSequenceRunning = false;
 
-    public GameObject hand;
-    public int currentHandIndex;
+    public List<DualCard> playerCards;
+    private List<DualCard> opponentCards;
+    public List<int> playerDeck;
+    private List<int> opponentDeck;
+    private int currentHandIndex;
 
-    public bool isSequenceRunning = false;
-
-    private void Awake()
+    private void Start()
     {
-        hand.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -200);
-        if(instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
         Init();
         StartCoroutine(ChangeHand());
     }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space) && !isSequenceRunning)
             StartCoroutine(ChangeHand());
+
+        if(Input.GetKeyDown(KeyCode.R))
+            SceneManager.LoadScene("Dual");
     }
 
     private void Init()
     {
-        currentHandIndex = -1;
+        for(int i=0; i<Random.Range(1, 20); i++)
+        {
+            playerDeck.Add(Random.Range(0, 30));
+        }
+
+        foreach(int item in playerDeck)
+        {
+            GameObject playerCard = Instantiate(playerCardPrefab, hand.transform);
+            DualCard dualCard = playerCard.GetComponent<DualCard>();
+            dualCard.dualManager = transform.GetComponent<DualManager>();
+            dualCard.canvas = canvas;
+            dualCard.Init(item);
+        }
 
         foreach(Transform child in hand.transform)
         {
             playerCards.Add(child.GetComponent<DualCard>());
         }
+        currentHandIndex = -1;
     }
 
     public void Dual()
-    {
-
-    }
-
-    private void FlipOppnentCard()
     {
 
     }
@@ -176,19 +174,18 @@ public class DualManager : MonoBehaviour
 
     IEnumerator ChangeHand()
     {
-        if(playerCards.Count <= 4)
+        isSequenceRunning = true;
+        RectTransform handPosition = hand.GetComponent<RectTransform>();
+        
+        if(playerCards.Count > 5)
         {
-
-        }
-
-        else
-        {
-            RectTransform handPosition = hand.GetComponent<RectTransform>();
             yield return handPosition.DOAnchorPosY(-200, 0.5f);
             yield return new WaitForSeconds(0.5f);
-            SetHand();
-            yield return handPosition.DOAnchorPosY(236, 0.5f);
         }
+
+        SetHand();
+        yield return handPosition.DOAnchorPosY(236, 0.5f)
+        .OnComplete(()=> isSequenceRunning = false);
     }
 
     private void SetCard(int index, Vector2 position, float rotation)

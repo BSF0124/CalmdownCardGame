@@ -5,12 +5,12 @@ using DG.Tweening;
 public class OppnentCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     public Canvas canvas;
+    public DualManager dualManager;
     public Tracker tracker;
 
     private RectTransform rectTransform;
     private RectTransform cardImage;
     private Vector2 initalPosition;
-    private Vector2 tracker_initalPosition;
     private Vector2 dragOffset;
     private float duration = 0.2f;
     
@@ -28,21 +28,24 @@ public class OppnentCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if(!DualManager.instance.isDraging)
+        if(!dualManager.isDraging)
             cardImage.DOScale(new Vector3(1.1f, 1.1f, 1.1f), duration);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if(!DualManager.instance.isDraging)
+        if(!dualManager.isDraging)
             cardImage.DOScale(Vector3.one, duration);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if(!DualManager.instance.isDraging && !DualManager.instance.isSequenceRunning)
+        if(!dualManager.isDraging && !dualManager.isSequenceRunning)
         {
-            tracker.PanelOnOff();
+            if(tracker.gameObject.activeSelf)
+                tracker.PanelOff();
+            else
+                tracker.PanelOn();
         }
     }
 
@@ -55,14 +58,14 @@ public class OppnentCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        DualManager.instance.isDraging = true;
+        dualManager.isDraging = true;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, eventData.position, eventData.pressEventCamera, out var localPointerPosition);
         dragOffset = localPointerPosition - rectTransform.anchoredPosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        DualManager.instance.isDraging = false;
+        dualManager.isDraging = false;
         rectTransform.DOAnchorPos(initalPosition, duration);
     }
 }
