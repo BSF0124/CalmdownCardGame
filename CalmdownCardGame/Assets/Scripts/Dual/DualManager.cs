@@ -1,23 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class DualManager : MonoBehaviour
 {
     public Canvas canvas;
-    public GameObject playerCardPrefab;
     public GameObject hand;
+    public Tracker tracker;
+
+    public GameObject playerCardPrefab;
 
     [HideInInspector] public DualCard selectedCard;
     [HideInInspector] public bool isDraging = false;
     [HideInInspector] public bool isSequenceRunning = false;
 
     public List<DualCard> playerCards;
-    private List<DualCard> opponentCards;
     public List<int> playerDeck;
-    private List<int> opponentDeck;
     private int currentHandIndex;
 
     private void Start()
@@ -60,7 +60,16 @@ public class DualManager : MonoBehaviour
 
     public void Dual()
     {
+        if(selectedCard != null)
+        {
+            HideHand();
+            tracker.PanelOff();
+        }
+        
+        else
+        {
 
+        }
     }
 
     public void SelectCard(DualCard card)
@@ -175,17 +184,18 @@ public class DualManager : MonoBehaviour
     IEnumerator ChangeHand()
     {
         isSequenceRunning = true;
-        RectTransform handPosition = hand.GetComponent<RectTransform>();
         
         if(playerCards.Count > 5)
         {
-            yield return handPosition.DOAnchorPosY(-200, 0.5f);
-            yield return new WaitForSeconds(0.5f);
+            HideHand();
+            yield return new WaitForSeconds(1f);
         }
-
         SetHand();
-        yield return handPosition.DOAnchorPosY(236, 0.5f)
-        .OnComplete(()=> isSequenceRunning = false);
+
+        ShowHand();
+        yield return new WaitForSeconds(1f);
+
+        isSequenceRunning = false;
     }
 
     private void SetCard(int index, Vector2 position, float rotation)
@@ -201,5 +211,16 @@ public class DualManager : MonoBehaviour
         {
             SetCard(indices[i], positions[i], rotations[i]);
         }
+    }
+
+    public void ShowHand()
+    {
+        RectTransform handPosition = hand.GetComponent<RectTransform>();
+        handPosition.DOAnchorPosY(236, 0.5f);
+    }
+    public void HideHand()
+    {
+        RectTransform handPosition = hand.GetComponent<RectTransform>();
+        handPosition.DOAnchorPosY(-200, 0.5f);
     }
 }

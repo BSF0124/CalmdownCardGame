@@ -10,6 +10,7 @@ public class DualCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private RectTransform rectTransform;
     private RectTransform cardImage;
+    private RectTransform statusPanel;
 
     private Vector2 initalPosition;
     private Vector2 dragOffset;
@@ -27,6 +28,7 @@ public class DualCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         rectTransform = GetComponent<RectTransform>();
         cardImage = transform.GetChild(0).GetComponent<RectTransform>();
+        statusPanel = transform.GetChild(1).GetComponent<RectTransform>();
     }
 
     public void Init(int cardID)
@@ -63,13 +65,28 @@ public class DualCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
         if(!dualManager.isDraging)
-            cardImage.DOScale(new Vector3(1.1f, 1.1f, 1.1f), duration);
+        {
+            cardImage.DOScale(new Vector3(1.1f, 1.1f, 1.1f), duration).OnComplete(() =>
+            {
+                statusPanel.localScale = Vector3.zero;
+                statusPanel.gameObject.SetActive(true);
+                statusPanel.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack);
+            });
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         if(!dualManager.isDraging)
-            cardImage.DOScale(Vector3.one, duration);
+        {
+            cardImage.DOScale(Vector3.one, duration).OnComplete(() =>
+            {
+                statusPanel.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack).OnComplete(() =>
+                {
+                    statusPanel.gameObject.SetActive(false);
+                });
+            });
+        }
     }
 
     public void OnPointerClick(PointerEventData eventData)
