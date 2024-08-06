@@ -8,8 +8,9 @@ public class DualManager : MonoBehaviour
 {
     public Canvas canvas;
     public GameObject hand;
+    public GameObject field;
     public Tracker tracker;
-
+    public OpponentCard opponentCard;
     public GameObject playerCardPrefab;
 
     [HideInInspector] public DualCard selectedCard;
@@ -33,6 +34,9 @@ public class DualManager : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.R))
             SceneManager.LoadScene("Dual");
+
+        if(Input.GetKeyDown(KeyCode.Return))
+            StartCoroutine(Dual());
     }
 
     private void Init()
@@ -58,19 +62,110 @@ public class DualManager : MonoBehaviour
         currentHandIndex = -1;
     }
 
-    public void Dual()
-    {
-        if(selectedCard != null)
-        {
-            HideHand();
-            tracker.PanelOff();
-        }
-        
-        else
-        {
+    public IEnumerator Dual()
+{
+    isSequenceRunning = true;  // 시퀀스가 실행 중임을 표시
+    yield return null;
 
+    if (selectedCard != null)
+    {
+        // 원래 위치와 회전값 저장
+        RectTransform rect = selectedCard.transform.GetComponent<RectTransform>();
+        Vector2 originalPosition = rect.anchoredPosition;
+        Quaternion originalRotation = rect.rotation;
+
+        // 현재 형제 인덱스 저장
+        int siblingIndex = selectedCard.transform.GetSiblingIndex();
+        bool isTrackerActive = tracker.gameObject.activeSelf;
+
+        // 선택된 카드를 필드로 이동
+        selectedCard.transform.SetParent(field.transform);
+        yield return selectedCard.transform.GetComponent<RectTransform>().DORotate(Vector2.zero, 0.5f).WaitForCompletion();
+        yield return selectedCard.transform.GetComponent<RectTransform>().DOAnchorPos(Vector2.zero, 0.5f).WaitForCompletion();
+
+        HideHand();
+        if (isTrackerActive)
+        {
+            tracker.PanelOff();  // 트래커 패널 끄기
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        // 상대방 카드 뒤집기
+        yield return StartCoroutine(opponentCard.Flip(Random.Range(0, opponentCard.opponentCards.Count)));
+
+        // 여기서 승부 결과 로직을 추가할 수 있습니다
+        // 예: 승리/패배를 결정하고 게임 상태를 업데이트
+
+        yield return new WaitForSeconds(1f);
+        yield return StartCoroutine(opponentCard.Flip(Random.Range(0, opponentCard.opponentCards.Count)));
+
+        // 선택된 카드를 화면 밖으로 이동
+        yield return selectedCard.transform.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, -700f), 0.5f).WaitForCompletion();
+
+        // 선택된 카드를 원래 상태로 복원
+        selectedCard.transform.SetParent(hand.transform);
+        selectedCard.transform.SetSiblingIndex(siblingIndex);
+        rect.anchoredPosition = originalPosition;
+        rect.rotation = originalRotation;
+        selectedCard = null;
+        ShowHand();
+        if (isTrackerActive)
+        {
+            tracker.PanelOn();  // 트래커 패널 다시 켜기
         }
     }
+
+    isSequenceRunning = false;  // 시퀀스 종료 표시
+}
+
+
+    // public IEnumerator Dual()
+    // {
+    //     isSequenceRunning = true;
+    //     yield return null;
+
+    //     if(selectedCard != null)
+    //     {
+    //         RectTransform rect = selectedCard.transform.GetComponent<RectTransform>();
+    //         Vector2 _position = rect.rect.position;
+    //         Quaternion _quaternion = rect.rotation;
+
+    //         int siblingIndex = selectedCard.transform.GetSiblingIndex();
+    //         bool isTrackerActivate = tracker.gameObject.activeSelf;
+
+    //         selectedCard.transform.parent = field.transform;
+    //         yield return selectedCard.transform.GetComponent<RectTransform>().DOAnchorPos(Vector2.zero, 0.5f);
+    //         yield return selectedCard.transform.GetComponent<RectTransform>().DORotate(Vector2.zero, 0.5f);
+            
+    //         HideHand();
+    //         if(isTrackerActivate)
+    //             tracker.PanelOff();
+    //         yield return new WaitForSeconds(1f);
+
+    //         yield return StartCoroutine(opponentCard.Flip(Random.Range(0, opponentCard.opponentCards.Count)));
+    //         /*
+    //         승부 결과
+    //         */
+    //         yield return new WaitForSeconds(1f);
+
+    //         yield return selectedCard.transform.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, -500f), 0.5f);
+            
+    //         selectedCard.transform.parent = hand.transform;
+    //         selectedCard.transform.SetSiblingIndex(siblingIndex);
+    //         rect.anchoredPosition = _position;
+    //         rect.rotation = _quaternion;
+    //         ShowHand();
+    //         if(isTrackerActivate)
+    //             tracker.PanelOn();
+    //     }
+        
+    //     else
+    //     {
+
+    //     }
+    //     isSequenceRunning = false;
+    // }
 
     public void SelectCard(DualCard card)
     {

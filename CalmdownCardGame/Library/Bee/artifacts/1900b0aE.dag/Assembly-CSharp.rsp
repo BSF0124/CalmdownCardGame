@@ -397,7 +397,7 @@
 "Assets/Scripts/CardData.cs"
 "Assets/Scripts/Dual/DualCard.cs"
 "Assets/Scripts/Dual/DualManager.cs"
-"Assets/Scripts/Dual/OppnentCard.cs"
+"Assets/Scripts/Dual/OpponentCard.cs"
 "Assets/Scripts/Dual/Status.cs"
 "Assets/Scripts/Dual/Tracker.cs"
 "Assets/Scripts/MainMenu/MainMenu.cs"
