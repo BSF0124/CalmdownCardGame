@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638553310434023331
-    m_Hash: 2152400145
+      ticks: 638586483197590416
+    m_Hash: 2927087489
   m_LockFileStatus:
     m_FilePath: D:/Github/CalmdownCardGame/CalmdownCardGame/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638553310434111567
-    m_Hash: 2361253852
+      ticks: 638586483197704671
+    m_Hash: 2651981342
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_LocalPackages:
@@ -116,9 +116,11 @@ m_ResolvedPackages:
     - 2.2.0
     - 2.3.1
     - 2.4.3
+    - 2.4.4
     compatible:
     - 2.3.1
     - 2.4.3
+    - 2.4.4
     recommended: 2.3.1
     deprecated: []
   dependencies: []
@@ -547,6 +549,123 @@ m_ResolvedPackages:
   isDeprecated: 0
   deprecationMessage: 
   fingerprint: 
+- packageId: com.unity.recorder@4.0.3
+  testable: 0
+  isDirectDependency: 1
+  version: 4.0.3
+  source: 1
+  resolvedPath: D:\Github\CalmdownCardGame\CalmdownCardGame\Library\PackageCache\com.unity.recorder@4.0.3
+  assetPath: Packages/com.unity.recorder
+  name: com.unity.recorder
+  displayName: Recorder
+  author:
+    name: 
+    email: 
+    url: 
+  category: 
+  type: assets
+  description: 'The Recorder allows you to capture and save data from the Unity Editor
+    during Play mode: animations, videos, images, audio, arbitrary output variables
+    (AOVs), and more.'
+  status: 0
+  errors: []
+  versions:
+    all:
+    - 2.0.0-preview.6
+    - 2.0.1-preview.1
+    - 2.0.2-preview.3
+    - 2.0.3-preview.1
+    - 2.1.0-preview.1
+    - 2.2.0-preview.4
+    - 2.3.0-preview.3
+    - 2.4.0-preview.1
+    - 2.5.0-pre.1
+    - 2.5.2
+    - 2.5.4
+    - 2.5.5
+    - 2.5.7
+    - 2.6.0-exp.3
+    - 2.6.0-exp.4
+    - 3.0.0-pre.1
+    - 3.0.0-pre.2
+    - 3.0.0
+    - 3.0.1
+    - 3.0.2
+    - 3.0.3
+    - 3.0.4
+    - 4.0.0-pre.1
+    - 4.0.0-pre.2
+    - 4.0.0-pre.3
+    - 4.0.0-pre.4
+    - 4.0.0-pre.5
+    - 4.0.0
+    - 4.0.1
+    - 4.0.2
+    - 4.0.3
+    - 5.0.0-pre.1
+    - 5.0.0
+    - 5.1.0-pre.1
+    - 5.1.0
+    - 5.1.1
+    compatible:
+    - 4.0.2
+    - 4.0.3
+    recommended: 4.0.3
+    deprecated: []
+  dependencies:
+  - name: com.unity.timeline
+    version: 1.0.0
+  resolvedDependencies:
+  - name: com.unity.timeline
+    version: 1.7.6
+  - name: com.unity.modules.director
+    version: 1.0.0
+  - name: com.unity.modules.audio
+    version: 1.0.0
+  - name: com.unity.modules.animation
+    version: 1.0.0
+  - name: com.unity.modules.particlesystem
+    version: 1.0.0
+  keywords:
+  - unity
+  - recorder
+  - recording
+  - capture
+  - video
+  - animation
+  - clip
+  - images
+  - AOV
+  - render
+  - pass
+  - layer
+  registry:
+    id: main
+    name: 
+    url: https://packages.unity.com
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+  hideInEditor: 1
+  isAssetStorePackage: 0
+  datePublishedTicks: 638531089740000000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.recorder@4.0/manual/index.html
+  hasRepository: 1
+  repository:
+    type: git
+    url: https://github.cds.internal.unity3d.com/unity/com.unity.recorder.git
+    revision: d42db7a3a1c4a580ea4aecf19ca57659c965c89d
+    path: 
+  unityLifecycle:
+    version: 4.0.2
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+  isDeprecated: 0
+  deprecationMessage: 
+  fingerprint: 
 - packageId: com.unity.render-pipelines.universal@14.0.11
   testable: 0
   isDirectDependency: 1
@@ -758,6 +877,7 @@ m_ResolvedPackages:
     - 1.4.2
     - 1.4.3
     - 1.4.4
+    - 1.4.5
     - 2.0.1-exp.1
     - 2.0.1-exp.2
     - 2.0.1-pre.12
@@ -778,6 +898,7 @@ m_ResolvedPackages:
     - 1.4.2
     - 1.4.3
     - 1.4.4
+    - 1.4.5
     - 2.0.1-exp.1
     - 2.0.1-exp.2
     - 2.0.1-pre.12
@@ -3600,12 +3721,14 @@ m_ResolvedPackages:
     - 1.8.14
     - 1.8.15
     - 1.8.16
+    - 1.8.17
     compatible:
     - 1.8.13
     - 1.8.14
     - 1.8.15
     - 1.8.16
-    recommended: 1.8.16
+    - 1.8.17
+    recommended: 1.8.17
     deprecated: []
   dependencies:
   - name: com.unity.mathematics
@@ -4702,6 +4825,7 @@ m_ResolvedPackages:
     - 9.0.1
     - 9.0.2
     - 9.0.3
+    - 9.0.4
     - 10.0.0-pre.1
     - 10.0.0-pre.2
     - 10.0.0
@@ -4714,7 +4838,8 @@ m_ResolvedPackages:
     compatible:
     - 9.0.2
     - 9.0.3
-    recommended: 9.0.3
+    - 9.0.4
+    recommended: 9.0.4
     deprecated: []
   dependencies:
   - name: com.unity.mathematics
@@ -5220,6 +5345,7 @@ m_ResolvedPackages:
     - 8.0.0
     - 8.0.1
     - 8.0.2
+    - 8.0.3
     - 9.0.0-pre.1
     - 9.0.0-pre.2
     - 9.0.0
@@ -5230,7 +5356,8 @@ m_ResolvedPackages:
     - 9.0.5
     compatible:
     - 8.0.2
-    recommended: 8.0.2
+    - 8.0.3
+    recommended: 8.0.3
     deprecated: []
   dependencies:
   - name: com.unity.2d.sprite
@@ -5377,6 +5504,7 @@ m_ResolvedPackages:
     - 2.4.1
     - 2.4.2
     - 2.5.0-exp.1
+    - 2.5.0-pre.2
     compatible:
     - 1.2.4
     - 1.3.1
@@ -5400,6 +5528,7 @@ m_ResolvedPackages:
     - 2.4.1
     - 2.4.2
     - 2.5.0-exp.1
+    - 2.5.0-pre.2
     recommended: 2.4.2
     deprecated: []
   dependencies:

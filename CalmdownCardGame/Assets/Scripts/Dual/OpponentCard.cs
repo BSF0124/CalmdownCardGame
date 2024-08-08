@@ -115,9 +115,9 @@ public class OpponentCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public IEnumerator Flip(int index)
     {
         Image image = cardImage.GetComponent<Image>();
-        yield return rectTransform.DORotate(new Vector3(0, 90, 0), 0.5f);
-        yield return new WaitForSeconds(1);
+        yield return rectTransform.DORotate(new Vector3(0, 90, 0), 0.2f);
+        yield return new WaitForSeconds(0.5f);
         image.sprite = image.sprite==backImage? opponentCards[index].cardSprite : backImage;
-        yield return rectTransform.DORotate(Vector3.zero, 0.5f);
+        yield return rectTransform.DORotate(Vector3.zero, 0.2f);
     }
 }
